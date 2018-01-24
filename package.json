@@ -1,0 +1,11 @@
+{
+  "name": "http-nextra",
+  "version": "1.0.0",
+  "description": "Dependency-less and lightning-fast HTTP wrapper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kyranet",
+  "license": "MIT"
+}
