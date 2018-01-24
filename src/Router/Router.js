@@ -2,14 +2,53 @@ const Piece = require('./Piece');
 
 class Router {
 
+	/**
+	 * Constructs a router
+	 * @since 0.0.1
+	 * @param {APIServer} server The server that manages this router
+	 * @param {string} path The path of this router
+	 */
 	constructor(server, path) {
-		this.paths = [];
-		this._onAll = null;
+		/**
+		 * @since 0.0.1
+		 * @type {APIServer}
+		 */
 		this.server = server;
+
+		/**
+		 * @since 0.0.1
+		 * @type {(Router|Piece)[]}
+		 */
+		this.paths = [];
+
+		/**
+		 * @since 0.0.1
+		 * @type {?Function}
+		 */
+		this._onAll = null;
+
+		/**
+		 * @since 0.0.1
+		 * @type {boolean}
+		 */
 		this._variable = path.startsWith(':');
+
+		/**
+		 * @since 0.0.1
+		 * @type {string}
+		 */
 		this.path = this._variable ? path.slice(1, path.length) : path;
 	}
 
+	/**
+	 * Add a new path to the router
+	 * @since 0.0.1
+	 * @param {string} name The name of the new path
+	 * @param {string} method The request method to support
+	 * @param {Function} [condition] The condition callback
+	 * @param {Function} [callback] The callback to run on requests
+	 * @returns {this}
+	 */
 	add(name, method = 'GET', condition, callback) {
 		if (typeof callback === 'undefined' && typeof condition === 'function') {
 			callback = condition;
@@ -24,6 +63,16 @@ class Router {
 		return this;
 	}
 
+	/**
+	 * Parse the path
+	 * @since 0.0.1
+	 * @param {string[]} parts The parts of the path
+	 * @param {Request} request The request
+	 * @param {Response} response The response
+	 * @param {*} options The options
+	 * @returns {*}
+	 * @private
+	 */
 	isPath(parts, request, response, options) {
 		if (this.path === parts[0] || this._variable) {
 			if (this._variable) [options[this.path]] = parts;
@@ -36,6 +85,16 @@ class Router {
 		return null;
 	}
 
+	/**
+	 * Run the path
+	 * @since 0.0.1
+	 * @param {string[]} parts The parts of the path
+	 * @param {Request} request The request
+	 * @param {Response} response The response
+	 * @param {*} options The options
+	 * @returns {*}
+	 * @private
+	 */
 	runPath(parts, request, response, options) {
 		const piece = this.paths.find(path => path.isPath(parts, request, response, options));
 		if (!piece) {

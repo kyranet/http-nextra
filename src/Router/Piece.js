@@ -1,15 +1,57 @@
 class Piece {
 
 	constructor(router, name, method, condition, callback) {
+		/**
+		 * The type of the piece
+		 * @since 0.0.1
+		 * @type {string}
+		 */
 		this.type = 'Piece';
+
+		/**
+		 * Whether the piece holds a variable or not
+		 * @since 0.0.1
+		 * @type {boolean}
+		 * @private
+		 */
 		this._variable = name.startsWith(':');
+
+		/**
+		 * The name of the piece
+		 * @since 0.0.1
+		 * @type {string}
+		 */
 		this.name = this._variable ? name.slice(1, name.length) : name;
+
+		/**
+		 * The request method this piece is meant to run
+		 * @since 0.0.1
+		 * @type {string}
+		 */
 		this.method = method;
+
+		/**
+		 * The inhibitor condition
+		 * @since 0.0.1
+		 * @type {?Function}
+		 */
 		this._condition = condition;
+
+		/**
+		 * The callback to run
+		 * @since 0.0.1
+		 * @type {Function}
+		 */
 		this._callback = callback;
-		this._router = router;
 	}
 
+	/**
+	 * Run the Piece
+	 * @since 0.0.1
+	 * @param {Request} request The request
+	 * @param {Response} response The response
+	 * @param {*} options The options
+	 */
 	async run(request, response, options) {
 		const shouldRun = this._condition ?
 			await this._condition(request, response, options) :
@@ -20,6 +62,15 @@ class Piece {
 		else response.end();
 	}
 
+	/**
+	 * Check if it's a valid path
+	 * @since 0.0.1
+	 * @param {string[]} parts The parts of the patch
+	 * @param {Request} request The request
+	 * @param {Response} response The response
+	 * @param {*} options The options
+	 * @returns {(this|false)}
+	 */
 	isPath(parts, request, response, options) {
 		if (request.method !== this.method || parts.length > 1) return false;
 		if (this._variable) [options[this.name]] = parts;

@@ -1,6 +1,6 @@
 {
   "name": "http-nextra",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Dependency-less and lightning-fast HTTP wrapper",
   "main": "index.js",
   "scripts": {
