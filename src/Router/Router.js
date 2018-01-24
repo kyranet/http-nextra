@@ -1,4 +1,5 @@
 const Piece = require('./Piece');
+const { METHODS } = require('http');
 
 class Router {
 
@@ -105,6 +106,15 @@ class Router {
 		return null;
 	}
 
+}
+
+// Add all the aliases for better usage
+for (const method of METHODS) {
+	Object.defineProperty(Router.prototype, method.toLowerCase(), {
+		value: function (name, condition, callback) { // eslint-disable-line func-names
+			return this.add(name, method, condition, callback);
+		}
+	});
 }
 
 module.exports = Router;

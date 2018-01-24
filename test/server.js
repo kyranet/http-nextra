@@ -11,6 +11,6 @@ server.listen('5000', (error) => {
 	else console.log('Server is up!');
 });
 
-server.router.add('api/guilds/:guild/members/:member', 'GET', (request, response, { guild, member }) => {
+server.router.get('api/guilds/:guild/members/:member', (request, response, { guild, member }) => {
 	response.end(`The selected guild is: ${guild}, and member is: ${member}`);
 });
