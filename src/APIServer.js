@@ -1,5 +1,8 @@
-const { Server } = require('http');
+const { Server, IncomingMessage, ServerResponse } = require('http');
 const Router = require('./Router/Router');
+const ResponseNextra = require('./ResponseNextra');
+
+ServerResponse.prototype = new ResponseNextra(IncomingMessage);
 
 class APIServer extends Server {
 
