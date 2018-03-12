@@ -19,13 +19,8 @@ class ResponseNextra extends ServerResponse {
 		this.end(JSON.stringify(obj));
 	}
 
-	png(buffer) {
-		this.setHeader('Content-Type', MIMETYPES['.png']);
-		this.end(buffer);
-	}
-
-	jpeg(buffer) {
-		this.setHeader('Content-Type', MIMETYPES['.jpg']);
+	image(buffer, type = 'png') {
+		this.setHeader('Content-Type', MIMETYPES[`.${type}`]);
 		this.end(buffer);
 	}
 
