@@ -26,3 +26,7 @@ server.router.get('json', (request, response) => {
 		}
 	});
 });
+
+server.router.get('redirect', (request, response) => {
+	response.redirect('/json');
+});
