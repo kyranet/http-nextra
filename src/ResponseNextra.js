@@ -3,12 +3,6 @@ const { readFileSync } = require('fs');
 
 class ResponseNextra extends ServerResponse {
 
-	constructor(request) {
-		super(request);
-
-		this.request = request;
-	}
-
 	send(data) {
 		this.setHeader('Content-Type', MIMETYPES.default);
 		this.end(data);
