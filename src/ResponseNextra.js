@@ -29,6 +29,11 @@ class ResponseNextra extends ServerResponse {
 		this.end(buffer);
 	}
 
+	redirect(path) {
+		this.writeHead(303, { Location: `http://${this.request.headers.host}${path}` });
+		this.end();
+	}
+
 }
 
 const MIMETYPES = {

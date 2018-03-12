@@ -6,8 +6,11 @@ ServerResponse.prototype = new ResponseNextra(IncomingMessage);
 
 class APIServer extends Server {
 
-	constructor(...args) {
-		super(...args);
+	constructor(options, listener) {
+		super((request, response) => {
+			Object.defineProperty(response, 'request', { value: request });
+			listener(request, response);
+		});
 
 		/**
 		 * The main router
