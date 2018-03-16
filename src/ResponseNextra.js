@@ -3,30 +3,42 @@ const { readFileSync } = require('fs');
 
 class ResponseNextra extends ServerResponse {
 
-	send(data) {
-		this.setHeader('Content-Type', MIMETYPES.default);
-		this.end(data);
+	constructor(...args) {
+		super(...args);
+
+		this.contentType = null;
+	}
+
+	end(data) {
+		this.server.headers['Content-Type'] = this.contentType;
+		this.writeHead(200, this.server.headers);
+		super.end(data);
+	}
+
+	send(str) {
+		this.contentType = MIMETYPES.default;
+		this.end(str);
 	}
 
 	sendFile(path) {
 		const data = readFileSync(path);
-		this.setHeader('Content-Type', MIMETYPES[path.substr(path.lastIndexOf('.'))]);
+		this.contentType = MIMETYPES[path.substr(path.lastIndexOf('.'))];
 		this.end(data);
 	}
 
 	json(obj) {
-		this.setHeader('Content-Type', MIMETYPES['.json']);
+		this.contentType = MIMETYPES['.json'];
 		this.end(JSON.stringify(obj));
 	}
 
 	image(buffer, type = 'png') {
-		this.setHeader('Content-Type', MIMETYPES[`.${type}`]);
+		this.contentType = MIMETYPES[`.${type}`];
 		this.end(buffer);
 	}
 
 	redirect(path) {
 		this.writeHead(303, { Location: `http://${this.request.headers.host}${path}` });
-		this.end();
+		super.end();
 	}
 
 }
@@ -38,7 +50,8 @@ const MIMETYPES = {
 	'.js': 'text/javascript',
 	'.json': 'application/json',
 	'.jpg': 'image/jpeg',
-	'.png': 'image/png'
+	'.png': 'image/png',
+	'.ico': 'image/x-icon'
 };
 
 module.exports = ResponseNextra;
