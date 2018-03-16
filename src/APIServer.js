@@ -6,7 +6,7 @@ ServerResponse.prototype = new ResponseNextra(IncomingMessage);
 
 class APIServer extends Server {
 
-	constructor(options, listener) {
+	constructor(options = {}, listener) {
 		super((request, response) => {
 			Object.defineProperty(response, 'request', { value: request });
 			listener(request, response);
@@ -18,6 +18,8 @@ class APIServer extends Server {
 		 * @type {Router}
 		 */
 		this.router = new Router(this, '/');
+
+		this.options = options;
 	}
 
 }
