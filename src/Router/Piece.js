@@ -51,6 +51,7 @@ class Piece {
 	 * @param {Request} request The request
 	 * @param {Response} response The response
 	 * @param {*} options The options
+	 * @returns {boolean}
 	 */
 	async run(request, response, options) {
 		const shouldRun = this._condition ?
