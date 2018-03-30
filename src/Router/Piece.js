@@ -57,9 +57,15 @@ class Piece {
 			await this._condition(request, response, options) :
 			true;
 
-		if (shouldRun) this._callback(request, response, options);
-		else if (this._onInhibit) this._onInhibit(request, response, options);
-		else response.end();
+		if (shouldRun) {
+			this._callback(request, response, options);
+			return true;
+		} else if (this._onInhibit) {
+			this._onInhibit(request, response, options);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
