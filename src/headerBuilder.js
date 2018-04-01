@@ -84,7 +84,7 @@ exports.Expires = (opts) => {
 };
 
 exports['Surrogate-Control'] = (opts) => {
-	if (typeof opts !== 'boolean') throw new Error('[Expires] options must be a boolean');
+	if (typeof opts !== 'boolean') throw new Error('[Surrogate-Control] options must be a boolean');
 
 	return 'no-store';
 };
