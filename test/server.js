@@ -1,6 +1,6 @@
 const { APIServer } = require('../index');
 
-const server = new APIServer(undefined, async (request, response) => {
+const server = new APIServer(async (request, response) => {
 	if (!await server.router.runPath(request.url.slice(1).split('/'), request, response, {})) {
 		response.end('Hello!');
 	}

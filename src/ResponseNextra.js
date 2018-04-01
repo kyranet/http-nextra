@@ -22,7 +22,7 @@ class ResponseNextra extends ServerResponse {
 	 * @param {(string|Buffer)} data Any data to be sent
 	 */
 	end(data) {
-		this.server.headers['Content-Type'] = this.contentType;
+		this.server.headers['Content-Type'] = this.contentType || ResponseNextra.MIMETYPES.default;
 		this.writeHead(200, this.server.headers);
 		super.end(data);
 	}
@@ -32,7 +32,7 @@ class ResponseNextra extends ServerResponse {
 	 * @param {string} str A message
 	 */
 	send(str) {
-		this.contentType = MIMETYPES.default;
+		this.contentType = ResponseNextra.MIMETYPES.default;
 		this.end(str);
 	}
 
@@ -42,7 +42,7 @@ class ResponseNextra extends ServerResponse {
 	 */
 	sendFile(path) {
 		const data = readFileSync(path);
-		this.contentType = MIMETYPES[path.substr(path.lastIndexOf('.'))];
+		this.contentType = ResponseNextra.MIMETYPES[path.substr(path.lastIndexOf('.'))];
 		this.end(data);
 	}
 
@@ -51,7 +51,7 @@ class ResponseNextra extends ServerResponse {
 	 * @param {Object} obj An object
 	 */
 	json(obj) {
-		this.contentType = MIMETYPES['.json'];
+		this.contentType = ResponseNextra.MIMETYPES['.json'];
 		this.end(JSON.stringify(obj));
 	}
 
@@ -61,7 +61,7 @@ class ResponseNextra extends ServerResponse {
 	 * @param {string} [type=png] The type of the image (png or jpg)
 	 */
 	image(buffer, type = 'png') {
-		this.contentType = MIMETYPES[`.${type}`];
+		this.contentType = ResponseNextra.MIMETYPES[`.${type}`];
 		this.end(buffer);
 	}
 
@@ -76,7 +76,7 @@ class ResponseNextra extends ServerResponse {
 
 }
 
-const MIMETYPES = {
+ResponseNextra.MIMETYPES = {
 	default: 'text/plain',
 	'.html': 'text/html',
 	'.css': 'text/css',

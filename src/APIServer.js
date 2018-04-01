@@ -13,10 +13,10 @@ class APIServer extends Server {
 
 	/**
 	 * Creates a new HTTP server
-	 * @param {Object} options Any object
 	 * @param {Function} listener A listener for HTTP requests. Arguments are `request` and `response`
+	 * @param {Object} options Any object
 	 */
-	constructor(options = {}, listener) {
+	constructor(listener, options = {}) {
 		super((request, response) => {
 			Object.defineProperty(response, 'request', { value: request });
 			listener(request, response);
