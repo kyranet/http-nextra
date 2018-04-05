@@ -1,7 +1,8 @@
 const { Server, IncomingMessage, ServerResponse } = require('http');
 const Router = require('./Router/Router');
 const ResponseNextra = require('./ResponseNextra');
-const builders = require('./headerBuilder');
+const builders = require('./Util/headerBuilder');
+const { DEFAULTS: { HEADERS } } = require('./Util/constants');
 
 ServerResponse.prototype = new ResponseNextra(IncomingMessage);
 
@@ -39,13 +40,13 @@ class APIServer extends Server {
 		 * The HTTP headers to set
 		 * @type {Object}
 		 */
-		this.options.headers = options.headers || DEFAULT_HEADERS;
+		this.options.headers = options.headers || HEADERS;
 
 		const { def, ...extras } = this.options.headers;
 
-		if (typeof def === 'boolean' && def) this.rawHeaders = extras ? { ...DEFAULT_HEADERS, ...extras } : { ...DEFAULT_HEADERS };
+		if (typeof def === 'boolean' && def) this.rawHeaders = extras ? { ...HEADERS, ...extras } : { ...HEADERS };
 		else if (typeof def === 'boolean' && !def) this.rawHeaders = extras ? { ...extras } : { };
-		else if (typeof def === 'undefined') this.rawHeaders = extras ? { ...extras } : { ...DEFAULT_HEADERS };
+		else if (typeof def === 'undefined') this.rawHeaders = extras ? { ...extras } : { ...HEADERS };
 
 		/**
 		 * Built HTTP headers from the raw headers option
@@ -72,18 +73,5 @@ class APIServer extends Server {
 	}
 
 }
-
-const DEFAULT_HEADERS = {
-	'X-DNS-Prefetch-Control': { allow: false },
-	'X-Frame-Options': { action: 'sameorigin' },
-	'X-Powered-By': false,
-	'Strict-Transport-Security': {
-		maxAge: 5184000,
-		includeSubDomains: true
-	},
-	'X-Download-Options': true,
-	'X-Content-Type-Options': true,
-	'X-XSS-Protection': true
-};
 
 module.exports = APIServer;
