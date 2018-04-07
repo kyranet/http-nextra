@@ -1,6 +1,7 @@
 const { ServerResponse } = require('http');
 const { createReadStream } = require('fs');
 const { extname } = require('path');
+const { DEFAULTS: { MIMETYPES } } = require('./Util/constants');
 
 
 /**
@@ -24,7 +25,7 @@ class ResponseNextra extends ServerResponse {
 	 * @param {(string|Buffer)} data Any data to be sent
 	 */
 	end(data) {
-		this.server.headers['Content-Type'] = this.contentType || ResponseNextra.MIMETYPES.default;
+		this.server.headers['Content-Type'] = this.contentType || MIMETYPES.default;
 		this.writeHead(200, this.server.headers);
 		super.end(data);
 	}
@@ -34,7 +35,7 @@ class ResponseNextra extends ServerResponse {
 	 * @param {string} str A message
 	 */
 	send(str) {
-		this.contentType = ResponseNextra.MIMETYPES.default;
+		this.contentType = MIMETYPES.default;
 		this.end(str);
 	}
 
@@ -44,7 +45,7 @@ class ResponseNextra extends ServerResponse {
 	 */
 	sendFile(path) {
 		const rstream = createReadStream(path);
-		this.contentType = ResponseNextra.MIMETYPES[extname(path)];
+		this.contentType = MIMETYPES[extname(path)];
 		rstream.pipe(this);
 	}
 
@@ -53,7 +54,7 @@ class ResponseNextra extends ServerResponse {
 	 * @param {Object} obj An object
 	 */
 	json(obj) {
-		this.contentType = ResponseNextra.MIMETYPES['.json'];
+		this.contentType = MIMETYPES['.json'];
 		this.end(JSON.stringify(obj));
 	}
 
@@ -63,7 +64,7 @@ class ResponseNextra extends ServerResponse {
 	 * @param {string} [type=png] The type of the image (png or jpg)
 	 */
 	image(buffer, type = 'png') {
-		this.contentType = ResponseNextra.MIMETYPES[`.${type}`];
+		this.contentType = MIMETYPES[`.${type}`];
 		this.end(buffer);
 	}
 
@@ -77,16 +78,5 @@ class ResponseNextra extends ServerResponse {
 	}
 
 }
-
-ResponseNextra.MIMETYPES = {
-	default: 'text/plain',
-	'.html': 'text/html',
-	'.css': 'text/css',
-	'.js': 'text/javascript',
-	'.json': 'application/json',
-	'.jpg': 'image/jpeg',
-	'.png': 'image/png',
-	'.ico': 'image/x-icon'
-};
 
 module.exports = ResponseNextra;
