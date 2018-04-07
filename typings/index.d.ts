@@ -72,7 +72,7 @@ declare module 'http-nextra' {
 		private _condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void;
 		private _callback: (request: IncomingMessage, response: ServerResponse, options: any) => void;
 
-		public async run(request: IncomingMessage, response: ServerResponse, options: any): Promise<void>;
+		public run(request: IncomingMessage, response: ServerResponse, options: any): Promise<void>;
 		public isPath(parts: string[], request: IncomingMessage, response: ServerResponse, options: any): (this|false)
 	}
 
