@@ -1,5 +1,7 @@
 const { ServerResponse } = require('http');
-const { readFileSync } = require('fs');
+const { createReadStream } = require('fs');
+const { extname } = require('path');
+
 
 /**
  * A class that extends http.ServerResponse to add helper methods
@@ -41,9 +43,9 @@ class ResponseNextra extends ServerResponse {
 	 * @param {string} path Path to the file
 	 */
 	sendFile(path) {
-		const data = readFileSync(path);
-		this.contentType = ResponseNextra.MIMETYPES[path.substr(path.lastIndexOf('.'))];
-		this.end(data);
+		const rstream = createReadStream(path);
+		this.contentType = ResponseNextra.MIMETYPES[extname(path)];
+		rstream.pipe(this);
 	}
 
 	/**
