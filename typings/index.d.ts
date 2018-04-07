@@ -68,7 +68,8 @@ declare module 'http-nextra' {
 		private _variable: boolean;
 		public name: string;
 		public method: string;
-		private _condition: (request: IncomingMessage, response: ServerResponse, options: any) => void;
+
+		private _condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void;
 		private _callback: (request: IncomingMessage, response: ServerResponse, options: any) => void;
 
 		public async run(request: IncomingMessage, response: ServerResponse, options: any): Promise<void>;
