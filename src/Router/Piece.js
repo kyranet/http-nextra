@@ -64,9 +64,8 @@ class Piece {
 		} else if (this._onInhibit) {
 			this._onInhibit(request, response, options);
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
