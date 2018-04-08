@@ -1,6 +1,6 @@
-exports['X-DNS-Prefetch-Control'] = ({ allow = false }) => {
-	if (typeof allow !== 'boolean') throw new Error('[X-DNS-Prefetch-Control] allow must be a boolean.');
-	return allow ? 'on' : 'off';
+exports['X-DNS-Prefetch-Control'] = (opts = false) => {
+	if (typeof opts !== 'boolean') throw new Error('[X-DNS-Prefetch-Control] options must be a boolean.');
+	return opts ? 'on' : 'off';
 };
 
 exports['X-Frame-Options'] = ({ action = 'SAMEORIGIN', domain }) => {

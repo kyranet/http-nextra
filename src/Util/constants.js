@@ -1,6 +1,6 @@
 exports.DEFAULTS = {
 	HEADERS: {
-		'X-DNS-Prefetch-Control': { allow: false },
+		'X-DNS-Prefetch-Control': false,
 		'X-Frame-Options': { action: 'sameorigin' },
 		'X-Powered-By': false,
 		'Strict-Transport-Security': {
