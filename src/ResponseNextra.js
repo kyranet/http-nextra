@@ -22,12 +22,14 @@ class ResponseNextra extends ServerResponse {
 
 	/**
 	 * Sets response headers and sends data to the body
-	 * @param {(string|Buffer)} data Any data to be sent
+	 * @param {(string|Buffer)} [data] Any data to be sent
+	 * @param {string} [encoding] The encoding to use to write the data
+	 * @param {Function} [callback] Called when the response stream is finished
 	 */
-	end(data) {
+	end(...args) {
 		this.server.headers['Content-Type'] = this.contentType || MIMETYPES.default;
 		this.writeHead(200, this.server.headers);
-		super.end(data);
+		super.end(...args);
 	}
 
 	/**
