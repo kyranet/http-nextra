@@ -71,11 +71,6 @@ exports['Cache-Control'] = (opts) => {
 	return 'no-store, no-cache, must-revalidate, proxy-revalidate';
 };
 
-exports.Pragma = (opts) => {
-	if (typeof opts !== 'boolean') throw new Error('[Pragma] options must be a boolean');
-
-	return 'no-cache';
-};
 
 exports.Expires = (opts) => {
 	if (typeof opts !== 'boolean') throw new Error('[Expires] options must be a boolean');
