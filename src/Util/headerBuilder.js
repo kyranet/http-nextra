@@ -3,7 +3,14 @@ exports['X-DNS-Prefetch-Control'] = (opts = false) => {
 	return opts ? 'on' : 'off';
 };
 
-exports['X-Frame-Options'] = ({ action = 'SAMEORIGIN', domain }) => {
+exports['X-Frame-Options'] = (opts) => {
+	if (typeof opt === 'boolean' && opts) return 'SAMEORIGIN';
+	else if (typeof opt === 'boolean' && !opts) return '';
+
+	if (!opts.action) throw new Error(`[X-Frame-Options] options requires a 'action' property.`);
+	else if (opts.action && opts.domain && opts.action.toUpperCase() !== 'ALLOW-FROM') throw new Error(`[X-Frame-Options] only action 'ALLOW-FROM' accepts a domain.`);
+
+	const { action = 'SAMEORIGIN', domain } = opts;
 	let ret;
 
 	if (typeof action === 'string')	ret = action.toUpperCase();
@@ -32,7 +39,7 @@ exports['Strict-Transport-Security'] = ({ maxAge = 5184000, includeSubDomains = 
 	else if (typeof includeSubDomains !== 'boolean') throw new Error('[Strict-Transport-Security] includeSubDomains must be a boolean.');
 	else if (typeof preload !== 'boolean') throw new Error('[Strict-Transport-Security] preload must be a boolean.');
 
-	return `max-age=${Math.round(maxAge)}${includeSubDomains ? '; includeSubDomains' : ''}${preload ? '; preload' : ''}`;
+	return `max-age=${parseMaxAge(Math.round(maxAge))}${includeSubDomains ? '; includeSubDomains' : ''}${preload ? '; preload' : ''}`;
 };
 
 exports['X-Download-Options'] = (opts) => {
@@ -52,7 +59,7 @@ exports['X-XSS-Protection'] = (opts) => {
 
 	if (typeof opts === 'boolean') return opts ? header : '';
 	else if (typeof opts === 'object' && opts.reportUri) return `${header}; report=${opts.reportUri}`;
-	else throw new Error('[X-XSS-Protection] Expected options to be a boolean or an object with reportUri property.');
+	else throw new Error('[X-XSS-Protection] options must be a boolean or an object with a reportUri property.');
 };
 
 exports['Expect-CT'] = ({ enforce, maxAge, reportUri }) => {
@@ -68,20 +75,19 @@ exports['Expect-CT'] = ({ enforce, maxAge, reportUri }) => {
 exports['Cache-Control'] = (opts) => {
 	if (typeof opts !== 'boolean') throw new Error('[Cache-Control] options must be a boolean');
 
-	return 'no-store, no-cache, must-revalidate, proxy-revalidate';
+	return opts ? 'no-store, no-cache, must-revalidate, proxy-revalidate' : '';
 };
 
-
 exports.Expires = (opts) => {
-	if (typeof opts !== 'boolean') throw new Error('[Expires] options must be a boolean');
+	if (typeof opts !== 'string') throw new Error('[Expires] options must be a string');
 
-	return '0';
+	return opts;
 };
 
 exports['Surrogate-Control'] = (opts) => {
 	if (typeof opts !== 'boolean') throw new Error('[Surrogate-Control] options must be a boolean');
 
-	return 'no-store';
+	return opts ? 'no-store' : '';
 };
 
 const parseMaxAge = (num) => {
