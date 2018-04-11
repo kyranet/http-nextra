@@ -6,6 +6,8 @@ declare module 'http-nextra' {
 		ServerResponse,
 	} from 'http';
 
+	export type MethodsHandler<T = {}> = (request: IncomingMessage, response: ServerResponse, params?: T) => void;
+
 	export class APIServer extends Server {
 		constructor(requestListener?: (req: IncomingMessage, res: ServerResponse) => void);
 
@@ -16,64 +18,63 @@ declare module 'http-nextra' {
 		constructor(server: APIServer, path: string);
 
 		public server: APIServer;
-		public paths: (Router|Piece)[];
+		public paths: Array<Router | Piece>;
 		private _onAll: Function;
 		private _variable: boolean;
 		public path: string;
 
-		public add(name: string, method?: string, condition?: Function, callback?: Function): this;
-		public isPath(parts: string[], request: IncomingMessage, response: ServerResponse, options: any): any;
-		public runPath(parts: string[], request: IncomingMessage, response: ServerResponse, options: any): any;
+		public add(name: string, method?: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		private isPath<T = {}>(parts: string[], request: IncomingMessage, response: ServerResponse, options: T): any;
+		private runPath<T = {}>(parts: string[], request: IncomingMessage, response: ServerResponse, options: T): any;
 
-		public acl(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public bind(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public checkout(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public connect(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public copy(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public delete(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public get(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public head(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public link(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public lock(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public 'm-search'(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public merge(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public mkactivity(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public mkcalendar(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public mkcol(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public move(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public notify(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public options(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public patch(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public post(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public propfind(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public proppatch(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public purge(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public put(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public rebind(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public report(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public search(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public subscribe(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public trace(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public unbind(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public unlink(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public unlock(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-		public unsubscribe(name: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void): this;
-
+		public acl(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public bind(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public checkout(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public connect(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public copy(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public delete(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public get(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public head(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public link(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public lock(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public 'm-search'(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public merge(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public mkactivity(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public mkcalendar(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public mkcol(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public move(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public notify(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public options(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public patch(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public post(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public propfind(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public proppatch(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public purge(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public put(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public rebind(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public report(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public search(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public subscribe(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public trace(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public unbind(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public unlink(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public unlock(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
+		public unsubscribe(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
 	}
 
 	export class Piece {
-		constructor(router: Router, name: string, method: string, condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void, callback?: (request: IncomingMessage, response: ServerResponse, options: any) => void);
+		constructor(router: Router, name: string, method: string, condition?: MethodsHandler, callback?: MethodsHandler);
 
 		public type: string;
 		private _variable: boolean;
 		public name: string;
 		public method: string;
 
-		private _condition?: (request: IncomingMessage, response: ServerResponse, options: any) => void;
-		private _callback: (request: IncomingMessage, response: ServerResponse, options: any) => void;
+		private _condition?: MethodsHandler;
+		private _callback: MethodsHandler;
 
-		public run(request: IncomingMessage, response: ServerResponse, options: any): Promise<void>;
-		public isPath(parts: string[], request: IncomingMessage, response: ServerResponse, options: any): (this|false)
+		public run<T = {}>(request: IncomingMessage, response: ServerResponse, options: T): Promise<void>;
+		public isPath<T = {}>(parts: string[], request: IncomingMessage, response: ServerResponse, options: T): (this|false)
 	}
 
 }
