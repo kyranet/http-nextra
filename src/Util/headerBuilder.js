@@ -4,8 +4,8 @@ exports['X-DNS-Prefetch-Control'] = (opts = false) => {
 };
 
 exports['X-Frame-Options'] = (opts) => {
-	if (typeof opt === 'boolean' && opts) return 'SAMEORIGIN';
-	else if (typeof opt === 'boolean' && !opts) return '';
+	if (typeof opts === 'boolean' && opts) return 'SAMEORIGIN';
+	else if (typeof opts === 'boolean' && !opts) return '';
 
 	if (!opts.action) throw new Error(`[X-Frame-Options] options requires a 'action' property.`);
 	else if (opts.action && opts.domain && opts.action.toUpperCase() !== 'ALLOW-FROM') throw new Error(`[X-Frame-Options] only action 'ALLOW-FROM' accepts a domain.`);
