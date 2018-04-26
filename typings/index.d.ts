@@ -6,12 +6,17 @@ declare module 'http-nextra' {
 		ServerResponse,
 	} from 'http';
 
-	export type MethodsHandler<T = {}> = (request: IncomingMessage, response: ServerResponse, params?: T) => void;
+	export type MethodsHandler<T = {}> = (request: IncomingMessage, response: ResponseNextra, params?: T) => void;
 
 	export class APIServer extends Server {
-		constructor(requestListener?: (req: IncomingMessage, res: ServerResponse) => void);
+		constructor(requestListener?: (req: IncomingMessage, res: ResponseNextra) => void, options?: APIServerOptions);
 
 		public router: Router;
+
+		public options: APIServerOptions;
+		public headers: BuiltHeaders;
+
+		public buildHeaders(opts: HeaderOptions): BuiltHeaders;
 	}
 
 	export class Router {
@@ -24,8 +29,8 @@ declare module 'http-nextra' {
 		public path: string;
 
 		public add(name: string, method?: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
-		private isPath<T = {}>(parts: string[], request: IncomingMessage, response: ServerResponse, options: T): any;
-		private runPath<T = {}>(parts: string[], request: IncomingMessage, response: ServerResponse, options: T): any;
+		private isPath<T = {}>(parts: string[], request: IncomingMessage, response: ResponseNextra, options: T): any;
+		private runPath<T = {}>(parts: string[], request: IncomingMessage, response: ResponseNextra, options: T): any;
 
 		public acl(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
 		public bind(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
@@ -73,8 +78,57 @@ declare module 'http-nextra' {
 		private _condition?: MethodsHandler;
 		private _callback: MethodsHandler;
 
-		public run<T = {}>(request: IncomingMessage, response: ServerResponse, options: T): Promise<void>;
-		public isPath<T = {}>(parts: string[], request: IncomingMessage, response: ServerResponse, options: T): (this|false)
+		public run<T = {}>(request: IncomingMessage, response: ResponseNextra, options: T): Promise<void>;
+		public isPath<T = {}>(parts: string[], request: IncomingMessage, response: ResponseNextra, options: T): (this|false);
 	}
+
+	export class ResponseNextra extends ServerResponse {
+		constructor(request: IncomingMessage);
+
+		public request: IncomingMessage;
+		public server: APIServer;
+		public contentType: string;
+
+		public end(data: string | Buffer, encoding: string, callback: () => void): void;
+		public send(str: string): void;
+		public sendFile(path: string): void;
+		public json<T = {}>(obj: T): void;
+		public image(buffer: Buffer, type = 'png'): void;
+		public redirect(path: string);
+	}
+
+	export type APIServerOptions = {
+		headers?: HeaderOptions
+	};
+
+	export type HeaderOptions = {
+		'X-DNS-Prefetch-Control'?: boolean,
+		'X-Frame-Options'?: boolean | { action: string, domain?: string },
+		'X-Powered-By'?: boolean | string,
+		'Strict-Transport-Security'?: {
+			maxAge?: number,
+			includeSubDomains?: boolean,
+			preload?: boolean
+		};
+		'X-Download-Options'?: boolean,
+		'X-XSS-Protection'?: boolean | { reportUri: string },
+		'Expect-CT'?: { enforce?: boolean, maxAge: number, reportUri?: string },
+		'Cache-Control'?: boolean,
+		Expires?: string,
+		'Surrogate-Control'?: boolean
+	};
+
+	export type BuiltHeaders = {
+		'X-DNS-Prefetch-Control'?: string,
+		'X-Frame-Options'?: string,
+		'X-Powered-By'?: string,
+		'Strict-Transport-Security'?: string,
+		'X-Download-Options'?: string,
+		'X-XSS-Protection'?: string,
+		'Expect-CT'?: string,
+		'Cache-Control'?: string,
+		Expires?: string,
+		'Surrogate-Control'?: string
+	};
 
 }
