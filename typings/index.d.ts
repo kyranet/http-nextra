@@ -6,10 +6,10 @@ declare module 'http-nextra' {
 		ServerResponse,
 	} from 'http';
 
-	export type MethodsHandler<T = {}> = (request: IncomingMessage, response: ResponseNextra, params?: T) => void;
+	export type MethodsHandler<T = {}> = (request: IncomingMessage, response: Response, params?: T) => void;
 
 	export class APIServer extends Server {
-		constructor(requestListener?: (req: IncomingMessage, res: ResponseNextra) => void, options?: APIServerOptions);
+		constructor(requestListener?: (req: IncomingMessage, res: Response) => void, options?: APIServerOptions);
 
 		public router: Router;
 
@@ -29,8 +29,8 @@ declare module 'http-nextra' {
 		public path: string;
 
 		public add(name: string, method?: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
-		private isPath<T = {}>(parts: string[], request: IncomingMessage, response: ResponseNextra, options: T): any;
-		private runPath<T = {}>(parts: string[], request: IncomingMessage, response: ResponseNextra, options: T): any;
+		private isPath<T = {}>(parts: string[], request: IncomingMessage, response: Response, options: T): any;
+		private runPath<T = {}>(parts: string[], request: IncomingMessage, response: Response, options: T): any;
 
 		public acl(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
 		public bind(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
@@ -78,27 +78,26 @@ declare module 'http-nextra' {
 		private _condition?: MethodsHandler;
 		private _callback: MethodsHandler;
 
-		public run<T = {}>(request: IncomingMessage, response: ResponseNextra, options: T): Promise<void>;
-		public isPath<T = {}>(parts: string[], request: IncomingMessage, response: ResponseNextra, options: T): (this|false);
+		public run<T = {}>(request: IncomingMessage, response: Response, options: T): Promise<void>;
+		public isPath<T = {}>(parts: string[], request: IncomingMessage, response: Response, options: T): (this|false);
 	}
 
-	export class ResponseNextra extends ServerResponse {
+	export class Response extends ServerResponse {
 		constructor(request: IncomingMessage);
 
 		public request: IncomingMessage;
 		public server: APIServer;
-		public contentType: string;
 
-		public end(data: string | Buffer, encoding: string, callback: () => void): void;
-		public send(str: string): void;
+		public send(data: (string|Buffer), mime?: string, callback?: () => void): void;
 		public sendFile(path: string): void;
-		public json<T = {}>(obj: T): void;
-		public image(buffer: Buffer, type = 'png'): void;
-		public redirect(path: string);
+		public json<T = {}>(obj: T, callback?: () => void): void;
+		public image(buffer: Buffer, type = 'png', callback?: () => void): void;
+		public redirect(path: string, status = 303);
+		public status(code = 200): this;
 	}
 
-	export type APIServerOptions = {
-		headers?: HeaderOptions
+	export type APIServerOptions<T = {}> = {
+		headers?: HeaderOptions & T;
 	};
 
 	export type HeaderOptions = {
