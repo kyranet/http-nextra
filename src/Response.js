@@ -40,9 +40,10 @@ class Response extends ServerResponse {
 			mime = '.html';
 		}
 
+		this.statusCode = 200;
 		this.setHeader('Content-Type', MIMETYPES[mime] || 'text/plain');
 
-		if (this.server.headers) this.writeHead(200, { ...this.server.headers });
+		if (this.server.headers) this.writeHead({ ...this.server.headers });
 		else this.writeHead(200);
 
 		return this.end(data, callback);
