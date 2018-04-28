@@ -91,9 +91,9 @@ declare module 'http-nextra' {
 		public send(data: (string|Buffer), mime?: string, callback?: () => void): void;
 		public sendFile(path: string): void;
 		public json<T = {}>(obj: T, callback?: () => void): void;
-		public image(buffer: Buffer, type = 'png', callback?: () => void): void;
-		public redirect(path: string, status = 303);
-		public status(code = 200): this;
+		public image(buffer: Buffer, type?: string, callback?: () => void): void;
+		public redirect(path: string, status?: number);
+		public status(code?: number): this;
 	}
 
 	export type APIServerOptions = {
@@ -102,33 +102,36 @@ declare module 'http-nextra' {
 	};
 
 	export type HeaderOptions = {
-		'X-DNS-Prefetch-Control'?: boolean,
-		'X-Frame-Options'?: boolean | { action: string, domain?: string },
-		'X-Powered-By'?: boolean | string,
-		'Strict-Transport-Security'?: {
-			maxAge?: number,
-			includeSubDomains?: boolean,
-			preload?: boolean
+		'X-DNS-Prefetch-Control'?: boolean;
+		'X-Frame-Options'?: boolean | { 
+			action: string;
+			domain?: string; 
 		};
-		'X-Download-Options'?: boolean,
-		'X-XSS-Protection'?: boolean | { reportUri: string },
-		'Expect-CT'?: { enforce?: boolean, maxAge: number, reportUri?: string },
-		'Cache-Control'?: boolean,
-		Expires?: string,
-		'Surrogate-Control'?: boolean
+		'X-Powered-By'?: boolean | string;
+		'Strict-Transport-Security'?: {
+			maxAge?: number;
+			includeSubDomains?: boolean;
+			preload?: boolean;
+		};
+		'X-Download-Options'?: boolean;
+		'X-XSS-Protection'?: boolean | { reportUri: string };
+		'Expect-CT'?: { enforce?: boolean, maxAge: number, reportUri?: string };
+		'Cache-Control'?: boolean;
+		Expires?: string;
+		'Surrogate-Control'?: boolean;
 	};
 
 	export type BuiltHeaders = {
-		'X-DNS-Prefetch-Control'?: string,
-		'X-Frame-Options'?: string,
-		'X-Powered-By'?: string,
-		'Strict-Transport-Security'?: string,
-		'X-Download-Options'?: string,
-		'X-XSS-Protection'?: string,
-		'Expect-CT'?: string,
-		'Cache-Control'?: string,
-		Expires?: string,
-		'Surrogate-Control'?: string
+		'X-DNS-Prefetch-Control'?: string;
+		'X-Frame-Options'?: string;
+		'X-Powered-By'?: string;
+		'Strict-Transport-Security'?: string;
+		'X-Download-Options'?: string;
+		'X-XSS-Protection'?: string;
+		'Expect-CT'?: string;
+		'Cache-Control'?: string;
+		Expires?: string;
+		'Surrogate-Control'?: string;
 	};
 
 }
