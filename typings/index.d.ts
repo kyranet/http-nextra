@@ -96,8 +96,9 @@ declare module 'http-nextra' {
 		public status(code = 200): this;
 	}
 
-	export type APIServerOptions<T = {}> = {
-		headers?: HeaderOptions & T;
+	export type APIServerOptions = {
+		headers?: HeaderOptions;
+		[key: string]: any;
 	};
 
 	export type HeaderOptions = {
