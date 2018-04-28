@@ -1,10 +1,10 @@
 const { Server, IncomingMessage, ServerResponse } = require('http');
 const Router = require('./Router/Router');
-const ResponseNextra = require('./ResponseNextra');
+const Response = require('./Response');
 const builders = require('./Util/headerBuilder');
 const { DEFAULTS: { HEADERS } } = require('./Util/constants');
 
-ServerResponse.prototype = new ResponseNextra(IncomingMessage);
+ServerResponse.prototype = new Response(IncomingMessage);
 
 /**
  * A class that extends http.Server with a built in router for HTTP requests.
@@ -36,23 +36,18 @@ class APIServer extends Server {
 		 */
 		this.options = options;
 
-		/**
-		 * The HTTP headers to set
-		 * @type {Object}
-		 */
-		this.options.headers = options.headers || HEADERS;
-
-		const { def, ...extras } = this.options.headers;
-
-		if (typeof def === 'boolean' && def) this.rawHeaders = extras ? { ...HEADERS, ...extras } : { ...HEADERS };
-		else if (typeof def === 'boolean' && !def) this.rawHeaders = extras ? { ...extras } : { };
-		else if (typeof def === 'undefined') this.rawHeaders = extras ? { ...extras } : { ...HEADERS };
+		if (options.headers) {
+			const { def, ...extras } = options.headers;
+			if (typeof def === 'boolean' && def) this.rawHeaders = extras ? { ...HEADERS, ...extras } : { ...HEADERS };
+			else if (typeof def === 'boolean' && !def) this.rawHeaders = extras ? { ...extras } : { };
+			else if (typeof def === 'undefined') this.rawHeaders = extras ? { ...extras } : { ...HEADERS };
+		}
 
 		/**
 		 * Built HTTP headers from the raw headers option
 		 * @type {Object}
 		 */
-		this.headers = this.buildHeaders(this.rawHeaders);
+		this.headers = this.rawHeaders ? this.buildHeaders(this.rawHeaders) : null;
 
 		Object.defineProperty(ServerResponse.prototype, 'server', { value: this });
 	}
