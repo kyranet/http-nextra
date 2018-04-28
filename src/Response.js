@@ -40,11 +40,13 @@ class Response extends ServerResponse {
 			mime = '.html';
 		}
 
-		this.statusCode = 200;
-		this.setHeader('Content-Type', MIMETYPES[mime] || 'text/plain');
+		if (this.server.headers) {
+			for (const [header, value] of Object.entries(this.server.headers)) {
+				if (!this.getHeader(header)) this.setHeader(header, value);
+			}
+		}
 
-		if (this.server.headers) this.writeHead({ ...this.server.headers });
-		else this.writeHead(200);
+		if (!this.getHeader('Content-Type')) this.setHeader('Content-Type', MIMETYPES[mime] || 'text/plain');
 
 		return this.end(data, callback);
 	}
@@ -62,11 +64,13 @@ class Response extends ServerResponse {
 	/**
 	 * Sends a JSON object to the body
 	 * @param {Object} obj An object
-	 * @param {Function} [callback] The callback to be passed to Response.end
+	 * @param {Function} [callback] The callback to be passed to Response.end()
 	 * @returns {void}
 	 */
 	json(obj, callback) {
-		return this.send(JSON.stringify(obj), '.json', callback);
+		this.setHeader('Content-Type', MIMETYPES['.json']);
+
+		return this.send(JSON.stringify(obj), callback);
 	}
 
 	/**
@@ -89,6 +93,16 @@ class Response extends ServerResponse {
 	redirect(path, status = 303) {
 		this.writeHead(status, { Location: `http://${this.request.headers.host}${path}` });
 		return this.end();
+	}
+
+	/**
+	 * Sets the HTTP status code for this response
+	 * @param {number} [code=200] The HTTP status to send
+	 * @returns {this}
+	 */
+	status(code = 200) {
+		this.statusCode = code;
+		return this;
 	}
 
 }
