@@ -30,7 +30,7 @@ declare module 'http-nextra' {
 
 		public add(name: string, method?: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
 		private isPath<T = {}>(parts: string[], request: IncomingMessage, response: Response, options: T): any;
-		private runPath<T = {}>(parts: string[], request: IncomingMessage, response: Response, options: T): any;
+		public runPath<T = {}>(parts: string[], request: IncomingMessage, response: Response, options: T): any;
 
 		public acl(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
 		public bind(name: string, condition?: MethodsHandler, callback?: MethodsHandler): this;
